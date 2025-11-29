@@ -1,0 +1,73 @@
+import numpy as np 
+
+"""
+unire più array insieme e come dividerne uno in parti più piccole.
+è possibile farlo senza cicli
+il caso più comune è concatenera due array monodimensionali
+UNIRE
+concatenate
+hstack e vstack sono funzioni speciali
+hstack unisce array per colonne (orizzontalmente)
+vstack unisce array per righe (verticalmente)
+column_stack
+row_stack
+DIVIDERE
+split per dividere un array in due o più parti uguali. Per dividere i dati blocchi
+vsplit divido spezzo le righe
+hsplit divido spezzo le colonne
+
+
+"""
+print("**********************")
+print("CONCATENATE")
+print("**********************")
+ar1=np.array([10,20,30,40,50])
+ar2=np.array([60,70,80,90,100])
+#unire array con concatenate
+ar_concat=np.concatenate((ar1,ar2)) 
+print(f"Array uniti con concatenate: {ar_concat}")
+print("**********************")
+print("CONCATENATE MULTIDIMENSIONALE ")
+print("**********************")
+br1=np.array([[1,2,3],[4,5,6]])
+br2=np.array([[7,8,9],[10,11,12]])
+br_concat=np.concatenate((br1,br2),axis=0)  #unione per righe
+bc_concat=np.concatenate((br1,br2),axis=0)  #unione per colonne
+print(f"Array uniti con concatenate per righe (axis=0): \n{br_concat}")
+print(f"Array uniti con concatenate per colonne (axis=1): \n{bc_concat}")
+print("**********************")
+print("CONCATENATE con vstack e hstack")
+print("**********************") 
+#unire array con vstack (vertical stack) e hstack (horizontal stack)
+cr1=np.array([1,2,3])
+cr2=np.array([4,5,6])
+cr_vstack=np.vstack((cr1,cr2))
+cr_hstack=np.hstack((cr1,cr2))
+print(f"Array uniti con vstack: \n{cr_vstack}")
+print(f"Array uniti con hstack: \n{cr_hstack}") 
+print("**********************")
+print("CONCATENATE con column_stack e row_stack")
+print("**********************") 
+#unire array con column_stack e row_stack
+dr1=np.array([10,20,30])
+dr2=np.array([40,50,60])    
+dr_colstack=np.column_stack((dr1,dr2))
+dr_rowstack=np.row_stack((dr1,dr2))
+print(f"Array uniti con column_stack: \n{dr_colstack}")
+print(f"Array uniti con row_stack: \n{dr_rowstack}") 
+print("**********************")
+print("SPLIT")
+print("**********************")
+#dividere array con split
+er=np.array([10,20,30,40,50,60,70,80,90,100])
+er_split=np.array_split(er,3)  #divido in 3 parti
+print(f"Array diviso in 3 parti con array_split: {er_split}")
+print("**********************") 
+print("SPLIT MULTIDIMENSIONALE")
+print("**********************")
+fr=np.array([[1,2,3,4,5,6],[7,8,9,10,11,12]])
+fr_split_r=np.array_split(fr,2,axis=0)  #divido in 2 parti per righe
+fr_split_c=np.array_split(fr,3,axis=1)  #divido in 3 parti per colonne
+print(f"Array diviso in 2 parti per righe con array_split: {fr_split_r}")
+print(f"Array diviso in 3 parti per colonne con array_split: {fr_split_c}")
+print("**********************")
