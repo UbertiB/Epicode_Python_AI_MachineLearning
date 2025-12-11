@@ -1,0 +1,112 @@
+
+"""
+ESERCIZIO 1
+* concatenare due array numpy di vendite giornaliere e trasformali
+in dataframe, reset indice
+ESERCIZIO 2
+* Normalizzare un dizionario annidato di transazioni per cliente e fare
+merge con i dati anagrafici
+ESERCIZIO 3
+* Caricare JSON di promozioni da API e fare merge con vendite multiple,
+usando due chiavi e suffissi per colonne duplicate
+ESERCIZIO 4
+* integrare clienti, transazioni, promozioni e bonus in join multiplo con outer join
+gestendo NaN, colonne duplicate e dati mancanti
+"""
+
+import pandas as pd
+import numpy as np
+import json
+
+if False:
+    print("-----------------------")
+    print("-----ESERCIZIO 1-------")
+    print("-----------------------")
+    array_vendite_negozio1=np.array([10,12,9,8,7,13,13])
+    array_vendite_negozio2=np.array([12,5,8,11,13,14,15])
+    array_giorni=np.array(["lunedi","martedi","mercoledi","giovedi","venerdi","sabato","domenica"])
+    df_vendite_negozio1=pd.DataFrame(array_vendite_negozio1)
+    df_vendite_negozio2=pd.DataFrame(array_vendite_negozio2)
+    df_giorni=pd.DataFrame(array_giorni)
+    df_tot=pd.concat([df_giorni,df_vendite_negozio1,df_vendite_negozio2],axis=1,ignore_index=True)
+    print(df_tot)
+if False:
+    print("-----------------------")
+    print("-----ESERCIZIO 2-------")
+    print("-----------------------")
+    data={1:[{"prodotto":"P1","quantita":100},{"prodotto":"P2","quantita":150},{"prodotto":"P3","quantita":145}],
+          2:[{"prodotto":"P1","quantita":95},{"prodotto":"P4","quantita":130}],          
+          3:[{"prodotto":"P1","quantita":105},{"prodotto":"P2","quantita":85}],
+        }
+    clienti=[{"cliente": 1, "nome":"Anna", "tipologia":"privato"},
+             {"cliente": 2, "nome":"Luca","tipologia":"azienda"},
+             {"cliente": 3, "nome":"Ettore","tipologia":"privato",}
+            ]   
+    df_clienti=pd.DataFrame(clienti)
+    records=[]
+    for c,v in data.items():
+        cliente=c
+        for valore in v:
+            for c1,v1 in valore.items():
+                if c1=="prodotto":
+                    prodotto=v1
+                if c1=="quantita":
+                    quantita=v1
+            records.append({"cliente":cliente,"prodotto":prodotto,"quantita":quantita})
+    df_records=pd.DataFrame(records)
+
+    print(pd.merge(df_clienti,df_records,on="cliente",how="outer"))
+
+if False:
+    print("-----------------------")
+    print("-----ESERCIZIO 3-------")
+    print("-----------------------")    
+    json_promozioni='''
+    [{"prodotto":"P1", "settimana":1,"promo":0.8},
+    {"prodotto":"P1", "settimana":2,"promo":0.9},
+    {"prodotto":"P2","settimana":1,"promo":0.95},
+    {"prodotto":"P2","settimana":2,"promo":0.70}
+    ]
+    '''
+    promozioni=pd.json_normalize(json.loads(json_promozioni))
+    transazioni=pd.DataFrame([{"prodotto":"P1","settimana":1,"ricavo":1000},
+                            {"prodotto":"P1","settimana":2,"ricavo":800},
+                            {"prodotto":"P2","settimana":1,"ricavo":1200},
+                            {"prodotto":"P2","settimana":2,"ricavo":1100}
+                            ])
+    df_finale=pd.merge(transazioni, promozioni,on=["prodotto","settimana"],how="left")
+    df_finale["ricavo_netto"]=df_finale["ricavo"]*df_finale["promo"]
+    print(df_finale)
+
+if True:
+    print("-----------------------")
+    print("-----ESERCIZIO 4-------")
+    print("-----------------------")   
+    df_clienti=pd.DataFrame([{"cliente":1,"nome":"Anna","tipologia":"privati"},
+                             {"cliente":2,"nome":"Luca","tipologia":"privati"},
+                             {"cliente":3,"nome":"Ettore","tipologia":"azienda"},
+                             {"cliente":4,"nome":"Maria","tipologia":"privati"}])
+    df_transazioni=pd.DataFrame([{"cliente":1,"prodotto":"P1","settimana":1,"quantita":100},
+                                 {"cliente":1,"prodotto":"P2","settimana":1,"quantita":150},
+                                 {"cliente":2,"prodotto":"P2","settimana":1,"quantita":130},
+                                 {"cliente":2,"prodotto":"P3","settimana":1,"quantita":80},
+                                 {"cliente":2,"prodotto":"P4","settimana":2,"quantita":125},
+                                 {"cliente":3,"prodotto":"P1","settimana":2,"quantita":140},
+                                 {"cliente":3,"prodotto":"P1","settimana":2,"quantita":140}])
+    df_prodotti=pd.DataFrame([{"prodotto":"P1","descrizione":"Prodotto 1", "prezzo":1000},
+                              {"prodotto":"P2","descrizione":"Prodotto 2", "prezzo":1200},
+                              {"prodotto":"P3","descrizione":"Prodotto 3", "prezzo":1250},
+                              {"prodotto":"P4","descrizione":"Prodotto 4", "prezzo":1450}])
+    df_promozioni=pd.DataFrame([{"prodotto":"P1","promo":0.8},
+                                {"prodotto":"P3","promo":0.85},
+                                {"prodotto":"P4","promo":0.9},
+                                {"prodotto":"P5","promo":0.99}])
+    df_merge1=pd.merge(df_clienti,df_transazioni,on="cliente",how="outer")
+    df_merge1=df_merge1.drop_duplicates()
+    
+    df_merge2=pd.merge(df_merge1,df_prodotti,on="prodotto",how="left")
+    df_merge3=pd.merge(df_merge2,df_promozioni,on="prodotto",how="left")
+    df_merge3["promo"]=df_merge3["promo"].fillna(1)
+    df_merge3["ricavo"]=df_merge3["quantita"]*df_merge3["prezzo"]*df_merge3["promo"]
+    print(df_merge3)
+
