@@ -42,7 +42,7 @@ date_possibili = pd.date_range(start="2025-01-01", end="2025-12-31", freq="D")
 n_ordini=1_000_000
 n_ordini=30
 #n_ordini=2
-file_Ordini_JSON="PFinale_Ordini.json"
+file_Ordini_CSV="PFinale_Ordini.csv"
 ordini=pd.DataFrame({
     "OrdineID":np.arange(1,n_ordini+1),
     "Data": np.random.choice(date_possibili, size=n_ordini),
@@ -51,7 +51,8 @@ ordini=pd.DataFrame({
     "Quantita": np.random.randint(1,20,n_ordini)
 })
 #print(ordini)
-ordini.to_json(file_Ordini_JSON,date_format="iso")
+ordini.to_csv(file_Ordini_CSV,sep=";",index=False)
+
 
 sconto_tipologia=pd.DataFrame({
     "Tipologia":(["Premium","Star"]),
@@ -60,39 +61,53 @@ sconto_tipologia=pd.DataFrame({
 
 #leggo i files da diverse fonti
 df_clienti=pd.read_csv(file_Clienti_CSV,sep=";")
+df_clienti["ClienteID"]=df_clienti["ClienteID"].astype("category")
 df_prodotti=pd.read_csv(file_Prodotti_CSV,sep=";")
-start=time.time()
-file=Path(file_Ordini_JSON)
-if not file.exists(): 
-    raise FileNotFoundError(f"File: {file_Ordini_JSON} non trovato.")
-with open(file, "r", encoding="utf-8") as f:
-    data = json.load(f)
-df_ordini = pd.DataFrame.from_dict(data)
+df_prodotti["ProdottoID"]=df_prodotti["ProdottoID"].astype("category")
 
-print(f"Tempo lettura json ordini: {time.time()-start}")
+#lettura ordini senza chunck
+start=time.time()
+df_ordini=pd.read_csv(file_Ordini_CSV,sep=";")
+
+print(f"Tempo lettura csv ordini: {time.time()-start}")
 print(f"Ordini :numero ordini={len(df_ordini)} \nmemory={df_ordini.memory_usage(deep=True).sum() / (1024**2):.2f} MB")
 
-#print(df_ordini.head())
-#pulizia e downcasting colonne
-df_ordini["OrdineID"]=df_ordini["OrdineID"].astype("int32")
-df_ordini["ClienteID"]=df_ordini["ClienteID"].astype("category")
-df_clienti["ClienteID"]=df_clienti["ClienteID"].astype("category")
-df_ordini["ProdottoID"]=df_ordini["ProdottoID"].astype("category")
-df_ordini["ProdottoID"]=df_ordini["ProdottoID"].astype("category")
-df_ordini["Quantita"]=df_ordini["Quantita"].astype("int16")
-df_ordini["Data"]=pd.to_datetime(df_ordini["Data"])
+#lettura ordini con chunk
+start=time.time()
+chunk_size=1000
+chunk_list=[]
+totale_valore=0
 
-#merge
-df_ordini=df_ordini.merge(df_clienti,on="ClienteID", how="left").merge(df_prodotti,on="ProdottoID",how="left").merge(sconto_tipologia, on="Tipologia",how="left")
-#valori mancanti
-df_ordini["Sconto"]=df_ordini["Sconto"].fillna(0)
-df_ordini["Importo_scontato"]=(df_ordini["Prezzo"]*(100-df_ordini["Sconto"])).round(2)
-#cancello colonne non più necessarie
-df_ordini = df_ordini.drop(columns=["Sconto"])
-df_ordini = df_ordini.drop(columns=["Prezzo"])
+for chunk in pd.read_csv(file_Ordini_CSV, sep=";", chunksize=chunk_size):
+    #pulizia e downcasting colonne
+    chunk["OrdineID"]=chunk["OrdineID"].astype("int32")
+    chunk["ClienteID"]=chunk["ClienteID"].astype("category")
+    chunk["ProdottoID"]=chunk["ProdottoID"].astype("category")
+    chunk["Quantita"]=chunk["Quantita"].astype("int16")
+    chunk["Data"]=pd.to_datetime(chunk["Data"])   
+    #merge+merge+merge
+    chunk=chunk.merge(df_prodotti,on="ProdottoID",how=("left")).merge(df_clienti,on="ClienteID",how="left").merge(sconto_tipologia, on="Tipologia",how="left")
+    #valori mancanti
+    chunk["Sconto"]=chunk["Sconto"].fillna(0)
+    #aggiunta di colonne
+    chunk["Prezzo_scontato"]=(chunk["Prezzo"]/((100-chunk["Sconto"])/100)).round(2)
+    chunk["Importo_scontato"]=chunk["Quantita"] * chunk["Prezzo_scontato"]
+    #cancello colonne non più necessarie
+    chunk = chunk.drop(columns=["Sconto"])
+    chunk = chunk.drop(columns=["Prezzo"])  
+    #aggiorno lista chunk  
+    chunk_list.append(chunk)
+
+    totale_valore+=chunk["Importo_scontato"].sum()
+print(totale_valore)
+df_ordini=pd.concat(chunk_list,ignore_index=True)
+print(df_ordini.head())
 
 print(f"memory={df_ordini.memory_usage(deep=True).sum() / (1024**2):.2f} MB")
-print(df_ordini.head(10))
+
+#esporto in formato efficiente come parquet per successive elaborazioni
+file_Ordini_PARQUET="Pfinale_prodotti.parquet"
+df_ordini.to_parquet(file_Ordini_PARQUET, index=False)
 
 #report tipologia
 report_tipologia = df_ordini.groupby(["Tipologia"]).agg(
