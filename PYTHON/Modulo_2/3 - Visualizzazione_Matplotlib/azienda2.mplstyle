@@ -1,0 +1,9 @@
+axes.titlesize  :16
+axes.labelsize  :14
+lines.linewidth :2
+#lines.color     :red
+xtick.labelsize :12
+ytick.labelsize :12
+font.family     :sans-serif
+# Palette aziendale: ciclo colori per serie successive
+axes.prop_cycle: cycler('color', ['#003366', '#006699', '#00A3E0', '#7A7A7A', '#00B388', '#FFB000'])

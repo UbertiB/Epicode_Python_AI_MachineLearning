@@ -1,0 +1,16 @@
+
+company_report.mplstyle
+font.family: sans-serif
+font.sans-serif: DejaVu Sans, Arial, Helvetica
+font.size: 12
+marker="o"
+axes.titlesize: 14
+axes.labelsize: 11
+lines.linewidth: 2.0
+lines.markersize: 6
+axes.grid: True
+grid.alpha: 0.3
+figure.figsize: 10, 5
+axes.prop_cycle: cycler('color', ['#004c97', '#00a3e0', '#f39c12', '#7fb800'])
+legend.frameon: False
+savefig.dpi: 150
