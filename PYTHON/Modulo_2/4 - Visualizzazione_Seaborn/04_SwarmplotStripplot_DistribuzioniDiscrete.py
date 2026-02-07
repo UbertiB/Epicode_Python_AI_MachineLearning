@@ -66,7 +66,7 @@ df = pd.DataFrame({
     ] * 5
 })
 print(df)
-
+#con jitter posso distanziare i punti ma saranno comunque sovrapposti se tanti presenti per lo stesso punto
 plt.figure(figsize=(8,5))
 sns.stripplot(data=df,x="giorno",y="soddisfazione",hue="fascia",dodge=True,jitter=0.2,palette="Set2", size=5)
 plt.title("Striplot della soddisfazione per giorno e fascaie")
@@ -75,6 +75,8 @@ plt.ylabel("Punteggio di soddisfazione")
 plt.legend()
 plt.show()
 
+#organizza automaticamente i punti per evitare che si sovrappongano tra di loro uno accanto all'altro, sciamo compatto
+#non adatto per set grandi, solo piccoli o medi
 plt.figure(figsize=(8,5))
 sns.swarmplot(data=df,x="giorno",y="soddisfazione",hue="fascia",dodge=True,palette="Set1", size=6)
 plt.title("Swarmplot della soddisfazione per giorno e fascaie")
@@ -83,6 +85,7 @@ plt.ylabel("Punteggio di soddisfazione")
 plt.legend()
 plt.show()
 
+#swarmplot combinato a violinplot
 plt.figure(figsize=(8,5))
 sns.violinplot(data=df,x="giorno",y="soddisfazione",inner=None,palette="coolwarm",cut=0)
 sns.swarmplot(data=df,x="giorno",y="soddisfazione",hue="fascia",dodge=True,palette="Set2", size=5)

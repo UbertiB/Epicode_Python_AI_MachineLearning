@@ -1,7 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-tips = sns.load_dataset("tips")
+df = sns.load_dataset("tips")
 sns.set_theme(style="whitegrid")
 
 #
@@ -11,7 +11,13 @@ sns.set_theme(style="whitegrid")
 # Creare un Jointplot 2d con KDE, aggiungendo HUE per una variabile categoriale e configurando le 
 # distribuzioni marginali come kde con rug plot.
 
-g = sns.jointplot(data=tips,x="total_bill",y="tip",hue="sex",kind="kde",fill=True,marginal_kws=dict(rug=True), palette="Set2", height=7)
+sns.jointplot(data=df,x="total_bill",y="tip",kind="reg")
+plt.legend()
+plt.title("total bill vs tip (male/female)")
+plt.tight_layout()
+plt.show
+#oppure
+g = sns.jointplot(data=df,x="total_bill",y="tip",hue="sex",kind="kde",fill=True,marginal_kws=dict(rug=True), palette="Set2", height=7)
 g.fig.subplots_adjust(top=0.92)  # lascia spazio sopra per il titolo
 g.fig.suptitle("Jointplot KDE: total_bill vs tip per sesso", y=0.99)
 plt.show()
@@ -31,11 +37,11 @@ plt.show()
 plt.figure(figsize=(10,6))
 
 # Violinplot
-sns.violinplot(data=tips,x="day",y="total_bill",hue="sex",palette="Pastel1",split=True,inner=None)
+sns.violinplot(data=df,x="day",y="total_bill",hue="sex",palette="Pastel1",split=True,inner=None)
 # Boxplot sovrapposto
-sns.boxplot(data=tips,x="day",y="total_bill",hue="sex",palette="Set2",fliersize=0,width=0.2,dodge=True)
+sns.boxplot(data=df,x="day",y="total_bill",hue="sex",palette="Set2",fliersize=0,width=0.2,dodge=True)
 # Scatter points sovrapposti
-sns.stripplot(data=tips,x="day",y="total_bill",hue="sex",palette="Set1",dodge=True,size=5,alpha=0.5)
+sns.stripplot(data=df,x="day",y="total_bill",hue="sex",palette="Set1",dodge=True,size=5,alpha=0.5)
 
 plt.title("Comparison Plot combinato: violin + box + punti")
 plt.ylabel("Total Bill")
@@ -46,7 +52,7 @@ plt.show()
 # Esercizio 3
 # Creare un FacetGrid avanzato che mostri scatterplot e KDE per più categorie, aggiungendo legenda e differenziazione per gruppi.
 
-g = sns.FacetGrid(tips,col="time",row="smoker",hue="sex",margin_titles=True,palette="Set1",height=4, aspect=1)
+g = sns.FacetGrid(df,col="time",row="smoker",hue="sex",margin_titles=True,palette="Set1",height=4, aspect=1)
 g.map_dataframe(sns.scatterplot, x="total_bill", y="tip", alpha=0.6, s=40)
 g.map_dataframe(sns.kdeplot, x="total_bill", y="tip", levels=5, color="gray", alpha=0.3)
 

@@ -151,10 +151,12 @@ plt.title("Heatmap triangolare delle correlazioni")
 plt.show()
 
 #il risultato oscilla tra -0.11 e +0.23 identifica che non esistono correlazioni forti.
-#questo dataset è realmente indipendente, o troppo piccolo, o troppo rumoroso, o simulato con random (come nel mio caso)
-#che non ci sia una correlazione lineare lo si vede anche nello scatterplot che poi andrò a visualizzare
-#tra a e b, a e c, a e d, b e c, b e d, c e d lo scatterplot evidenzia nubi, non c'è una direzione pertanto
-#non c'è un correlazione lineare (Pearson funziona solo con correlazioni lineari)
+#questo dataset è realmente indipendente, o troppo piccolo, o troppo rumoroso, o simulato con random 
+# (come nel mio caso)
+#Che non ci sia una correlazione lineare lo si vede anche nello scatterplot che poi andrò a visualizzare
+#tra a e b, a e c, a e d, b e c, b e d, c e d lo scatterplot evidenzia nubi, non c'è una direzione 
+#pertanto non c'è un correlazione lineare (Pearson funziona solo con correlazioni lineari)
+#potrebbe esserci un altro tipo di correlazione non lineare, ma Pearson non la individua
 
 sns.scatterplot(x=df["A"], y=df["B"])
 plt.title("Scatter A - B")
@@ -169,11 +171,11 @@ plt.show()
 #CLUSTERED HEATMAP CON DENDOGRAMMI
 #
 #combina la heatmap con i dendogrammi, con la heatmap nell'esempio sotto vedo che le variabili non 
-#hanno una relazione lineare forte, non hanno dipendenze, tutte coerenti con dati casuali. I valori oscillano
-#tra 0.11 e 0.28 confermando la mancanze di dipendenza lineare.
-#Alla Heatmap si aggiungono i dendogrammi, che raggruppa le variabili solo in base a somigliande relative
-#dei pattern, non a relazioni forti.
-#questa visualizzazione per indivisuare gruppi di variabili correlate tra di loro
+#hanno una relazione lineare forte, non hanno dipendenze, tutte coerenti con dati casuali. 
+# I valori oscillano tra 0.11 e 0.28 confermando la mancanze di dipendenza lineare.
+#Alla Heatmap si aggiungono i dendogrammi, che raggruppa le variabili solo in base a somiglianze relative
+#dei pattern, non ha relazioni forti.
+#questa visualizzazione è utile per indivisuare gruppi di variabili correlate tra di loro
 sns.clustermap(corr, cmap="vlag", center=0, annot=True)
 plt.suptitle("Clustered Heatmap con dendrogrammi", y=1.05)
 plt.show()

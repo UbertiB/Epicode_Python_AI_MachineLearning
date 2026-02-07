@@ -53,8 +53,8 @@ if True:
     sex_colors = {"Male": "deepskyblue", "Female": "hotpink"}
 
     # Relazione tra conto totale e mancia, suddivisa per sesso
-    #sns.lmplot(data=tips, x="total_bill", y="tip", hue="sex", palette=sex_colors, aspect=1.2, height=5)
-    sns.regplot(data=tips, x="total_bill", y="tip", hue="sex", aspect=1.2, height=5)
+    sns.lmplot(data=tips, x="total_bill", y="tip", hue="sex", palette=sex_colors, aspect=1.2, height=5)
+    #sns.regplot(data=tips, x="total_bill", y="tip", hue="sex", aspect=1.2, height=5)
     plt.title("Relazione tra Total Bill e Tip per Sesso")
     plt.show()
 

@@ -142,6 +142,8 @@ sns.pairplot(df,hue="species",diag_kind="kde", palette="Set2") #diag_kind="kde" 
 plt.suptitle("Pairplot con distinzione per specie (hue)",y=1.02)
 plt.show()
 #risultato: il tipo di fiore è importante per la dimensione del petalo
+#se due specie si sovrappngono molto significa che quelle variabili non discriminano bene tra di loro
+
 
 #
 #ANALISI DELLE SOLE VARIABILI 'INTERESSANTI' rilevate con il pairplot
@@ -188,7 +190,8 @@ pca.fit(X_scaled)
 print(pca.explained_variance_ratio_)
 print(pca.explained_variance_ratio_.cumsum())
 #4) PCA finale con SOLO 2 componenti (decisione motivata dai due print precedenti)
-pca = PCA(n_components=2)
+pca = PCA(n_components=2) #questo trasforma le 4 variabili originali in 2 variabili chiamate pc1 e pc2
+#ogni pc rappresenta una combinazione linerare delle variabili originali, in modo da catturare la massima varianza
 components = pca.fit_transform(X_scaled)
 #5) DataFrame PCA
 df_pca = pd.DataFrame(components, columns=["PC1", "PC2"])
@@ -197,6 +200,7 @@ df_pca["species"] = df["species"]
 sns.pairplot(df_pca, hue="species", diag_kind="kde", palette="coolwarm")
 plt.suptitle("Pairplot sulle componenti principali (PC1, PC2)", y=1.02)
 plt.show()
+#se i gruppi colorati si separano bene significa che la pca ha catturato correttamente la struttura dei dati
 
 #Per visualizzare da cosa sono composti PC1 e PC2 procedere nel seguente modo:
 loadings = pd.DataFrame(
