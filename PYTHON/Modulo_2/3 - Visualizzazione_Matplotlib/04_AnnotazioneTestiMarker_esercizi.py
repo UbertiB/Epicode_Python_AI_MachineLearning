@@ -30,7 +30,7 @@ if False:
     max_idx = df["vendite"].idxmax()
     min_idx = df["vendite"].idxmin()
     ultimo_idx = (df.index[-1],df.columns[-1])
-    print(ultimo_idx)
+    #print(ultimo_idx)
 
     ax.annotate(
         f"Massimo: {vendite[max_idx]}",
@@ -69,7 +69,7 @@ if False:
 
 
 #ESERCIZIO 2
-if True:
+if False:
     partite = pd.date_range("2025-01-01", periods=20, freq="W")
     risultati = np.random.choice(["V", "P"], size=len(partite), p=[0.6, 0.4])
     df_sport = pd.DataFrame({"partita": partite, "risultato": risultati})
@@ -111,7 +111,7 @@ if True:
 
 #ESERCIZIO 3
 
-if False:
+if True:
     # Simuliamo prezzi giornalieri
     #np.random.seed(0)
     date = pd.date_range("2025-01-01", periods=60)

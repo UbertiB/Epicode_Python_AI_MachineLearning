@@ -1,56 +1,88 @@
 """
 COLORMAP
+
 Una colormap è una funzione che mappa valori numerici a colori specifici.
-Ogni dato numerico viene trattato in una tonalità che rappresenta la sua intensità o posizione sulla scala.
-Una scelta accurato dei colori permette di enfatizzare pattern, anomalie, e le tendenze presenti 
+Se la mappatura è sbagliata, il grafico diventa una distorsione delle realtà.
+Ogni dato numerico viene trattato in una tonalità che rappresenta la sua intensità o la posizione nella scala.
+Una scelta accurata dei colori permette di enfatizzare pattern, anomalie, e le tendenze presenti 
 nel dataset.
 
 In matplotlib le colormap possono essere applicate a diversi elementi, offrendo flessibilità per visualizzare
 dati complessi in modo coerente.
 
-Abbiamo diversi categorie di colormap
-1) Sequential (sequenziali): per dati ordinati dal minimo al massimo, con sfumatore che vanno dal chiaro al scuro, 
-utilizzato per densità o insentità (viridis, plasma). I valori vanno dal basso all'alto (o viceversa) senza un centro logico.
+Ogno colormap può essere applicata:
+- heatmap
+- scatterplot
+- sarfaceplot
+- grafici 3D
+
+Hai sempre 3 'pezzi' va valutare:
+1) Dati (valori reali)
+2) Normalizzazione: trasforma i dati in un intervallo 0..1 (o in indici discreti)
+3) Colormap: mappa 0..1 in colori.
+Matplotlib da sia colormap pronte sia strumenti per crearle e per normalizzare in modo avanzato.
+
+Matplotlib raggruppa le colormap in categorie 'funzionali'
+1) SEQUENTIAL (sequenziali, monotone): per dati ordinati dal minimo al massimo (alto basso), con sfumatore 
+che vanno dal chiaro al scuro, ideale per rappresentare quantità crescenti come densità o insentità 
+(viridis, plasma). 
+I valori vanno dal basso all'alto (o viceversa) senza un centro logico.
 Da evitare se i dati sono categorici o se si vogliono confronti precisi valore per valore
-2) Diverging (divergenti): Due colori opposti con un centro neutro, per valori positivi/negativi con punto centrale.
-Da utilizzare quando esiste un punto, che può essere uno zero, una media, un target ed interessa la deviazione (quello che 
-c'è sopra e quello sotto). Esempio scostamento da budget, differenza previsto/consuntivo, margene positivo/negativo, ecc
+2) DIVERGING (divergenti): Due colori opposti con un centro neutro, per valori positivi/negativi con punto 
+centrale. Registra scostamenti rispetto a un target o uno zero (centro)
+Qui ha senso una colormap con centro evidenziato e due lati simmetrici o quasi
+Da utilizzare quando esiste un punto, che può essere uno zero, una media, un target ed interessa la deviazione 
+(quello che c'è sopra e quello sotto). Esempio scostamento da budget, differenza previsto/consuntivo, 
+margine positivo/negativo, ecc
 Da non utilizzare se non si ha un centro al di sotto o al di sopra del quale si vogliono evidenziare i dati
 Evidenziando deviazioni positivi o negativi rispetto al centro scelto (coolwarm,seismic)
-3) Categorical (categoriali): palette per dati discreti senza ordine numerico, ogni categoria ha un colore unico (tab10, Set3)
-Non utilizzare per dati numerici continui
-4) Cyclic (colormap cicliche): Sono colormap in cui l'inizio e la fine coincidono, il colore all'estremo minimo è identico
-a quello all'estremo massimo.
-Da utilizzare quando il dato è periodico, ciclico, si ripete in modo circolare, non è un vero minimo o massimo assoluto. 
+3) CATEGORICAL (categoriali/qualitative): per categorie, non per numeri. 
+Palette per dati discreti senza ordine numerico, ogni categoria ha un colore unico (tab10, Set3) utile per
+distringuere i gruppi o i cluster,
+Non utilizzare per dati numerici continui, la luminisità della palette non cresce in modo ordinato
+4) CYCLIC (colormap cicliche): Per dasti periodici. Sono colormap in cui l'inizio e la fine coincidono, 
+il colore all'estremo minimo è identico a quello all'estremo massimo.
+Da utilizzare quando il dato è periodico, ciclico, si ripete in modo circolare, non è un vero minimo o massimo 
+assoluto. 
 E' un cerchio non una retta
 per dati periodici (ore del giorno, stagioni, angoli), le palette si ripetono ciclicamente 
 sottolineando la continuità del ciclo.
 
-Matplotlib, permette di creare una colormap personalizzata, si possono definire sequenze di colori o tonalità diverse.
-Si possono definire sequenze di colori o interpelazioni tra tonalità diverse, possono essere continue (per gradienti di valori) 
-o discrete (per valori specifici o intervalli)
+Regola generale: se vuoi ch e'più=più' usa una colormap con luminosita crescente (perceptually uniform)
+Se vuoi 'sopra/sotto un target' usa diverging con centro fissato. 
+Se hai classi usa categorical
 
-La normalizzazione trasforma i dati grezzi in valori compatibili con le colormap.
-La normalizzazione standard porta i dati in un range da 0 a 1, spesso serve un approcio più a avanzato (tipo logaritmica, 
-percentili (per ridurre effetto degli outlet estremi), normalizzazione centrata su un valore di riferimento, 
-può tornare utile con una colormap divergin.
+Matplotlib, permette di creare una colormap personalizzata per adattarla alle esigenze specifiche del dataset
+che stiamo andando a lavorare.
+Si possono definire sequenze di colori o interpolazioni tra tonalità diverse, 
+possono essere continue (per gradienti di valori) o discrete (per valori specifici o intervalli).
 
-Palette continue:
-sfumano di colori adattandosi ai dati numerici continui
-Palette discrete:
+La NORMALIZZAZIONE trasforma i dati grezzi in valori compatibili con le colormap.
+La normalizzazione standard porta i dati in un range da 0 a 1, ma spesso serve un approcio più a avanzato 
+(tipo logaritmica, percentili (per ridurre effetto degli outlet estremi), normalizzazione centrata su un valore 
+di riferimento, può tornare utile con una colormap divergin.
+Questo permette di utilizzare la stessa colormap anche su dati diversi, mantenendo sempre la coerenza visiva e
+la stessa leggibilità
+
+PALETTE CONTINUE:
+si sfumano gradualmente tra i colori adattandosi ai dati numerici continui
+PALETTE DISCRETE:
 assegnano colori distinti a valori o intervalli specifici, ideali per categorie o intervalli limitati.
 
-Inversione
-inversione di una colormap permette di invertire la scala dei colori, per enfatizzare i valori bassi al posti di quelli alti 
-Shifting
+INVERSIONE
+inversione di una colormap permette di invertire la scala dei colori, per enfatizzare i valori bassi al posti 
+di quelli alti 
+SHIFTING
 Lo shifting sposta il range di colori rispetto ai dati, adattando la mappa ad un subset di valori
 
-Queste tecniche consentono una maggior flessibilità e migliorano le comunicazioni visive senza andare a modificare i dati.
+Queste tecniche consentono una maggior flessibilità e migliorano le comunicazioni visive senza andare a 
+modificare i dati.
 
-Una colorbar avanzata piò uncludere, etichette personalizzate, ticks intermedi per evidenziare le soglie importanti, 
-gradienti multipli o sezioni evidenziate , per sottolineare range critici. L'uso efficacie della colormap è fondamentale
+Una colorbar avanzata può uncludere, etichette personalizzate, ticks intermedi per evidenziare le soglie 
+importanti, gradienti multipli o sezioni evidenziate, per sottolineare range critici. 
 
-L'uso efficacie della colorbar è fondamentale per permettere all'osservatore di interpretare correttamente i colori
+L'uso efficacie della colorbar è fondamentale per permettere all'osservatore di interpretare correttamente 
+i colori
 
 plt.imshow(matrice, cmap="viridis")  # sequenziale
 plt.imshow(matrice, cmap="RdBu")     # diverging
@@ -69,8 +101,10 @@ from matplotlib.colors import ListedColormap
 #ESEMPIO COLORMAP SEQUENZIALE
 #
 
-#come esempio si pososno prendere i giorni di copertura magazzino, è perfetto per una colormap sequenziale perchè:
-#1) è un numero 2) è ordinabile 3) valori più alti hanno significato più chiaro 4) non è ciclico 5) non ha un centro neutro
+#come esempio si pososno prendere i giorni di copertura magazzino, è perfetto per una colormap sequenziale 
+# perchè:
+#1) è un numero 2) è ordinabile 3) valori più alti hanno significato più chiaro 4) non è ciclico 
+# 5) non ha un centro neutro
 #considera KPI: giorni di copertura=giacenza/consumo medio giornaliero
 #valutiamo 10 gg=ok 40gg=attenzione 120gg=immobilizzo
 #qui una colormap sequenziale è perfetta
@@ -82,10 +116,10 @@ from matplotlib.colors import ListedColormap
 data=np.random.rand(6,6)
 colori=["blue","white","red"]
 
-custom_cmap=LinearSegmentedColormap.from_list("blue_white_red",colori)
+custom_cmap=LinearSegmentedColormap.from_list("blue_white_red",colori) #blue_white_red è il nome scelto per la colormap personalizzata
 
-plt.matshow(data,cmap=custom_cmap)
-plt.colorbar()
+plt.matshow(data,cmap=custom_cmap) #crea una heatmap  cmap=custom_cmap associa la colorbar
+plt.colorbar() #mostra la colorbar
 plt.title("Heatmap con colormap personalizzata")
 plt.show()
 
@@ -103,7 +137,7 @@ plt.show()
 #PALETTE DISCRETA
 #
 data=np.random.randint(0,5,(6,6))
-discrete_map=ListedColormap(["red","green","blue","yellow","purple"])
+discrete_map=ListedColormap(["red","green","blue","yellow","purple"]) #array di colori personalizzati
 plt.matshow(data,cmap=discrete_map)
 plt.colorbar(ticks=range(5))
 plt.title("Heatmap con colormap discreta")

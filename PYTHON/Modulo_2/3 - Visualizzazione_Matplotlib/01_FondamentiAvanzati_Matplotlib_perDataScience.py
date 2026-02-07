@@ -25,7 +25,8 @@ L'approcio modulare e riutilizzabile è fondamentale per sviluppatori avanzati, 
 possono accettare dataframe e parametri restituendo figure pronte per reportistica, esportazione o dashboard.
 Questo garantisce coerenza tra visualizzazioni, riduce la scrittura di codice.
 
-Alla fine matplotlib non è solo una libreria per creare grafici è uno strumento professionale per la visualizzazione di dataset complessi.
+Alla fine matplotlib non è solo una libreria per creare grafici è uno strumento professionale per la 
+visualizzazione di dataset complessi, integrare np e pd.
 
 
 """

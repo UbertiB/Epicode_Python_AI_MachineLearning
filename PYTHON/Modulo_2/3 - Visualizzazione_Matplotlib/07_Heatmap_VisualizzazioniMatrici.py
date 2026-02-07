@@ -1,14 +1,19 @@
 """
 HEATMAP
 Sono rappresentazioni grafiche di dati bidimensionali in cui il colore di ciascuna cella indica l'intensità
-o il valore numerico. 
+o il valore numerico.
+
 Ideali per matrici o per tabelle di correlazione.
 * righe e colonne sono le dimensioni (esempio articoli x mesi)
+
 * colore è il valore (esempio basso=colore chiaro, alto=colore scuro)
 Hanno la capacità di trasformare grandi quantità di numeri in un'immagine immediatamente interpretabile.
 Non è un grafico di precisone, è uno strumento di percezione rapida dei pattern.
 Matplotlib permette di creare heatmap a partire da matrici o array bidimensionali funzioni come imshow o matshow convertono
 i valori numerici in colori, consentendo di misurare l'intensità di ciascuna cella.
+
+Se hai valori sbilanciati (esempio pochi enormi e tanti piccoli), una scale lineare nasconde tutto. 
+In questi casi procedi a normalizzare i dati prima di tutto il resto.
 Seaborn estende le capacità di matblotlib consentendo la creazione di heatmap più sofisticate, generando grafici con 
 annotazioni, scale automatiche ed annotazioni avanzate.
 Le heatmap sono particolarmente utili quando:

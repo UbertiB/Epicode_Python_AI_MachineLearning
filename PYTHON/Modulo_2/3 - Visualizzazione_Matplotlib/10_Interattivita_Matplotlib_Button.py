@@ -2,8 +2,8 @@
 BUTTON
 è un widget interattivo di matplotlib, concettualmente diverso dallo slider.
 Serve quando vuoi eseguire un'azione discreta, non variare un parametro continuo
-Il button ha sempre un asse (ax dedicato), un metodo click (on_clicked), una funzione che modifica
-oggetti già esistenti, un draw_idle() finale
+Il button ha sempre un asse (ax dedicato), un metodo click (on_clicked), una funzione che modifica oggetti 
+già esistenti, un draw_idle() finale
 """
 
 import numpy as np
@@ -22,8 +22,8 @@ line, = ax.plot(x, y, label="Serie")
 ax.legend()
 
 # Asse del bottone
-ax_button = plt.axes([0.4, 0.1, 0.2, 0.08])
-btn1 = Button(ax_button, "RESET")
+ax_button = plt.axes([0.4, 0.1, 0.2, 0.08]) #posizione e dimensione del contenitore ax_button
+btn1 = Button(ax_button, "RESET") #metto il pulsante all interno del contenitore
 
 # Callback
 def reset(event):
@@ -46,7 +46,7 @@ y_ma = pd.Series(y).rolling(5, min_periods=1).mean()
 
 show_ma = False
 
-ax_button = plt.axes([0.65, 0.1, 0.25, 0.08])
+ax_button = plt.axes([0.65, 0.1, 0.25, 0.08]) #posizione e dimensione del secondo pulsante, stessa dimensione del primo stessa linea y del primo, cambia la x
 btn2 = Button(ax_button, "Toggle MA")
 
 def toggle(event):

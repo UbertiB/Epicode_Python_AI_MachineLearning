@@ -26,13 +26,13 @@ l3, = ax.plot(df.index, df["S3"], label="S3")
 ax.legend(loc="upper left")
 
 # Area per CheckButtons (un axes “dedicato”)
-rax = plt.axes([0.82, 0.55, 0.16, 0.25])  # [left, bottom, width, height]
+rax = plt.axes([0.82, 0.55, 0.16, 0.25])  # posizione e dimensine del contenitore [left, bottom, width, height]
 labels = ["S1", "S2", "S3"]
 visibility = [True, True, True]
-check = CheckButtons(rax, labels, visibility)
+check = CheckButtons(rax, labels, visibility) #raggruppo i 3 checkbuttons
 
 # Mappa label -> linea
-line_map = {"S1": l1, "S2": l2, "S3": l3}
+line_map = {"S1": l1, "S2": l2, "S3": l3} #dizionario che associa la label al grafico plot corrispondente
 
 def toggle(label):
     line = line_map[label]

@@ -54,7 +54,7 @@ if False:
 
     x=np.linspace(0,10,100)
     y=np.sin(x)*np.exp(-0.1*x)
-    
+    print(x)
     fig,ax=plt.subplots()
     ax.plot(x,y,label="Serie attenuata")
 
