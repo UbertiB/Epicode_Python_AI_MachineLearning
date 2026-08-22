@@ -1,0 +1,114 @@
+{
+    "apple_pie": {
+        "nome": "Apple Pie",
+        "ingredienti_principali": [
+            "mele",
+            "farina",
+            "burro",
+            "zucchero",
+            "cannella"
+        ],
+        "calorie_kcal_stimate": 320,
+        "descrizione": "Torta di mele dolce e profumata con ripieno di mele e cannella."
+    },
+    "caesar_salad": {
+        "nome": "Caesar Salad",
+        "ingredienti_principali": [
+            "lattuga romana",
+            "parmigiano",
+            "crostini",
+            "salsa Caesar"
+        ],
+        "calorie_kcal_stimate": 350,
+        "descrizione": "Insalata fresca e croccante con lattuga, parmigiano e crostini."
+    },
+    "cheesecake": {
+        "nome": "Cheesecake",
+        "ingredienti_principali": [
+            "formaggio cremoso",
+            "biscotti",
+            "burro",
+            "zucchero"
+        ],
+        "calorie_kcal_stimate": 400,
+        "descrizione": "Dessert cremoso e ricco con base croccante di biscotti."
+    },
+    "fish_and_chips": {
+        "nome": "Fish and Chips",
+        "ingredienti_principali": [
+            "pesce",
+            "patate",
+            "farina",
+            "olio"
+        ],
+        "calorie_kcal_stimate": 800,
+        "descrizione": "Pesce fritto in pastella accompagnato da patatine fritte."
+    },
+    "greek_salad": {
+        "nome": "Greek Salad",
+        "ingredienti_principali": [
+            "pomodori",
+            "cetrioli",
+            "feta",
+            "olive",
+            "cipolla"
+        ],
+        "calorie_kcal_stimate": 250,
+        "descrizione": "Insalata mediterranea fresca e leggera con verdure, feta e olive."
+    },
+    "hamburger": {
+        "nome": "Hamburger",
+        "ingredienti_principali": [
+            "pane",
+            "carne",
+            "formaggio",
+            "insalata",
+            "pomodoro"
+        ],
+        "calorie_kcal_stimate": 550,
+        "descrizione": "Panino sostanzioso con carne e diversi condimenti."
+    },
+    "ice_cream": {
+        "nome": "Ice Cream",
+        "ingredienti_principali": [
+            "latte",
+            "panna",
+            "zucchero"
+        ],
+        "calorie_kcal_stimate": 250,
+        "descrizione": "Dessert freddo, dolce e cremoso."
+    },
+    "lasagna": {
+        "nome": "Lasagna",
+        "ingredienti_principali": [
+            "pasta",
+            "ragù",
+            "besciamella",
+            "parmigiano"
+        ],
+        "calorie_kcal_stimate": 500,
+        "descrizione": "Piatto caldo e sostanzioso composto da strati di pasta, ragù e besciamella."
+    },
+    "pizza": {
+        "nome": "Pizza",
+        "ingredienti_principali": [
+            "farina",
+            "pomodoro",
+            "mozzarella",
+            "olio"
+        ],
+        "calorie_kcal_stimate": 700,
+        "descrizione": "Piatto italiano con impasto lievitato, pomodoro e mozzarella."
+    },
+    "sushi": {
+        "nome": "Sushi",
+        "ingredienti_principali": [
+            "riso",
+            "pesce",
+            "alga nori",
+            "verdure"
+        ],
+        "calorie_kcal_stimate": 400,
+        "descrizione": "Piatto giapponese fresco e delicato a base di riso e pesce."
+    }
+}
