@@ -1,9 +1,27 @@
+# Ambienti Python
 .venv/
+
+# Cache Python / Jupyter
 __pycache__/
 .ipynb_checkpoints/
+
+# Modelli e checkpoint
 *.keras
 *.pt
+*.pth
 *.h5
+*.ckpt
+
+# Dataset
 data/
-models/
+dataset/
+FashionMNIST/
+*.mat
 *.zip
+
+# Cartelle modelli
+models/
+
+# Output temporanei di training
+samples/
+gallery_epoch_*.png
