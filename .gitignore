@@ -16,8 +16,11 @@ __pycache__/
 data/
 dataset/
 FashionMNIST/
+MNIST/
+cifar-10-batches-py/
 *.mat
 *.zip
+*.tar.gz
 
 # Cartelle modelli
 models/
