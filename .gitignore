@@ -28,3 +28,24 @@ models/
 # Output temporanei di training
 samples/
 gallery_epoch_*.png
+# Backup locali, pesi LLM e autenticazione
+.venv_backup_*/
+/requirements_venv_*.txt
+/requirements_restore_*.txt
+*.safetensors
+*.gguf
+pytorch_model*.bin
+hf_cache/
+_pip_cache/
+.env
+.env.*
+!.env.example
+token
+stored_tokens
+llama_crash_*.log
+
+# Output degli esperimenti GPT-2
+/PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2-sft-en/
+/PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2-sft-trl/
+/PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2_lora_en_final/
+/PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2_lora_final/
