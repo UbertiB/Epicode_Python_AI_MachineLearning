@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrazione LLM | LM Studio & Celery</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --bg-color: #F5F7FA;
+            --box-bg: #FFFFFF;
+            --text: #333333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 30px;
+            background-color: var(--bg-color);
+            color: var(--text);
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2C3E50;
+        }
+
+        .module {
+            background: var(--box-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #357ABD;
+        }
+
+        .output-console {
+            font-family: 'Courier New', Courier, monospace;
+            background: #1E1E1E;
+            color: #D4D4D4;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 100px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #E8F5E9;
+            color: #2E7D32;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Integrazione Servizi LLM</h1>
+    <p>Applicazione Flask modulare basata su Factory Pattern per la gestione di flussi asincroni e streaming dati.</p>
+
+    <div class="module">
+        <h2>Modulo 1: Elaborazione Asincrona (Celery)</h2>
+        <p>Invia un task per l'analisi dei dati in background senza bloccare il thread principale del server.</p>
+        <button class="btn" onclick="testCeleryTask()">Avvia Elaborazione</button>
+        <div id="celery-status" class="status-badge" style="display:none;"></div>
+    </div>
+
+    <div class="module">
+        <h2>Modulo 2: Chat & Streaming (LM Studio)</h2>
+        <p>Richiede l'esecuzione di LM Studio sulla porta 1234 con il modello configurato caricato.</p>
+        <textarea id="prompt-input" placeholder="Inserire una richiesta per il modello..."></textarea>
+        <button class="btn" onclick="testLMStudioStream()">Genera Testo (Streaming)</button>
+        <div id="stream-status" class="status-badge" style="display:none;"></div>
+        <div id="llm-output" class="output-console"></div>
+    </div>
+
+    <script>
+        // Gestione dei task asincroni tramite Celery
+        async function testCeleryTask() {
+            const statusBadge = document.getElementById('celery-status');
+            statusBadge.style.display = 'inline-block';
+            statusBadge.innerText = "Invio richiesta al broker...";
+            statusBadge.style.background = "#FFF3E0";
+            statusBadge.style.color = "#E65100";
+
+            try {
+                const res = await fetch('/api/analyze-async', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ testo: "Esempio di testo per analisi asincrona." })
+                });
+                const data = await res.json();
+
+                statusBadge.innerText = "Richiesta accettata. Task ID: " + data.task_id;
+                statusBadge.style.background = "#E8F5E9";
+                statusBadge.style.color = "#2E7D32";
+            } catch (e) {
+                statusBadge.innerText = "Errore durante l'invio della richiesta.";
+                statusBadge.style.background = "#FFEBEE";
+                statusBadge.style.color = "#C62828";
+            }
+        }
+
+        // Gestione dello streaming tramite Server-Sent Events (SSE)
+        async function testLMStudioStream() {
+            const outputBox = document.getElementById('llm-output');
+            const statusBadge = document.getElementById('stream-status');
+            const userPrompt = document.getElementById('prompt-input').value || "Descrivi brevemente l'architettura dei sistemi distribuiti.";
+
+            outputBox.innerText = '';
+            statusBadge.style.display = 'inline-block';
+            statusBadge.innerText = "Connessione al server LLM...";
+
+            try {
+                const res = await fetch('/api/stream-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userPrompt })
+                });
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                statusBadge.innerText = "Ricezione dati in corso...";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const righe = chunk.split('\n');
+
+                    righe.forEach(riga => {
+                        if (riga.startsWith('data: ')) {
+                            const str_dato = riga.replace('data: ', '');
+
+                            if (str_dato === '[DONE]') {
+                                statusBadge.innerText = "Elaborazione completata";
+                            } else {
+                                try {
+                                    const obj = JSON.parse(str_dato);
+                                    if (obj.error) {
+                                        outputBox.innerText += "\n\n[Errore]: " + obj.error;
+                                    } else {
+                                        outputBox.innerText += obj.token;
+                                    }
+                                    outputBox.scrollTop = outputBox.scrollHeight;
+                                } catch (e) { }
+                            }
+                        }
+                    });
+                }
+            } catch (e) {
+                statusBadge.innerText = "Errore di connessione.";
+                outputBox.innerText = "Impossibile stabilire lo stream. Verificare che il server sia attivo.";
+            }
+        }
+    </script>
+</body>
+
+</html>

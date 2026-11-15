@@ -1,0 +1,18 @@
+# File e cartelle da escludere durante la creazione dell'immagine Docker.
+# Escludere file non necessari riduce la dimensione del contesto di build e aumenta la sicurezza.
+
+# Cartelle temporanee di Python (contengono file pre-compilati non portabili)
+__pycache__/
+*.pyc
+
+# Ambiente virtuale locale (deve essere ricostruito dentro il container nel builder stage)
+.venv/
+
+# Metadati del sistema di controllo versione Git
+.git/
+
+# File di configurazione contenenti segreti o variabili d'ambiente locali
+.env
+
+# Notebook Jupyter e file temporanei di analisi dati
+*.ipynb

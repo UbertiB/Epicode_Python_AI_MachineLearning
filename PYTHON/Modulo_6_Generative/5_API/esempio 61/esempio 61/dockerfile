@@ -1,0 +1,71 @@
+# --- STAGE 1: FASE DI COMPILAZIONE (Builder) ---
+# Utilizziamo un'immagine Python ufficiale completa basata su Debian Slim per compilare le dipendenze.
+# Chiamiamo questo stadio 'builder' per poter poi copiare i risultati nello stadio successivo.
+FROM python:3.11-slim AS builder
+
+# Variabili d'Ambiente:
+# Impedisce a Python di generare file .pyc che non servono nel container
+ENV PYTHONDONTWRITEBYTECODE=1
+# Disabilita il buffering dell'output per vedere i log in tempo reale nei sistemi di orchestrazione
+ENV PYTHONUNBUFFERED=1
+
+# Definiamo la cartella di lavoro temporanea per la compilazione
+WORKDIR /build
+
+# Installiamo i pacchetti di sistema necessari per compilare alcune librerie Python (es. scikit-learn).
+# Usiamo '--no-install-recommends' per mantenere l'immagine leggera e puliamo la cache di apt subito dopo.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copiamo il file requirements.txt separatamente per sfruttare la cache dei layer di Docker.
+# Se il file non cambia, Docker salterà la reinstallazione delle librerie nei build successivi.
+COPY requirements.txt .
+
+# Installiamo le dipendenze nella cartella utente locale.
+# L'opzione --user assicura che le librerie siano facilmente separabili per la fase di copia successiva.
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+
+# --- STAGE 2: FASE DI ESECUZIONE (Runner) ---
+# Ripartiamo da un'immagine pulita per ridurre drasticamente la dimensione finale del container.
+# Non includeremo i compilatori e gli strumenti di sviluppo del primo stadio.
+FROM python:3.11-slim AS runner
+
+# Ripristiniamo le configurazioni essenziali per Python
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Aggiungiamo il percorso delle librerie installate dall'utente alla variabile di sistema PATH
+ENV PATH=/root/.local/bin:$PATH
+
+# Cartella di lavoro definitiva all'interno del container
+WORKDIR /app
+
+# Trasferimento Asset:
+# Copiamo solo il risultato finale dell'installazione delle librerie dallo stadio 'builder'.
+COPY --from=builder /root/.local /root/.local
+
+# Copiamo i file necessari al funzionamento del servizio AI:
+# Il modello addestrato (iris_model.pth), i parametri di scalatura (scaler.pkl) e il codice API (app.py).
+COPY iris_model.pth .
+COPY scaler.pkl .
+COPY app.py .
+
+# Informiamo Docker che il container ascolterà sulla porta 8000
+EXPOSE 8000
+
+# Controllo dello stato di salute (Healthcheck):
+# Ogni 30 secondi chiede all'endpoint /health se il servizio è attivo. 
+# Se l'API non risponde entro 5 secondi, il container viene segnato come non in salute.
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+# Comando di Avvio:
+# Utilizziamo uvicorn per lanciare l'applicazione FastAPI.
+# --host 0.0.0.0 è necessario per esporre il server all'esterno del container.
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# Suggerimenti per l'uso (Commenti):
+# Per creare l'immagine: docker build -t iris-classifier:v1.0.0 .
+# Per avviare il container: docker run -d -p 8000:8000 --name iris-service iris-classifier:v1.0.0

@@ -1,0 +1,12 @@
+cliente;articolo;quantita;importo
+Cliente A;Prodotto 1;500;5.0
+Cliente B;Prodotto 1;25;1.5
+Cliente A;Prodotto 1;800;50.0
+Cliente C;Prodotto 1;300;6.8
+Cliente A;Prodotto 1;2;2.0
+Cliente A;Prodotto 1;500;1.01
+Cliente B;Prodotto 1;1200;0.01
+Cliente C;Prodotto 1;4;6.0
+Cliente A;Prodotto 1;50;7.2
+Cliente C;Prodotto 1;80;5.0
+

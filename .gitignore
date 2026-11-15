@@ -1,51 +1,243 @@
-# Ambienti Python
+# ============================================================
+# 1. AMBIENTI VIRTUALI PYTHON
+# ============================================================
+
 .venv/
+venv/
+env/
+ENV/
 
-# Cache Python / Jupyter
+# Backup ambienti virtuali
+.venv_backup_*/
+
+# File temporanei per ripristino ambienti
+/requirements_venv_*.txt
+/requirements_restore_*.txt
+
+
+# ============================================================
+# 2. CACHE PYTHON E JUPYTER
+# ============================================================
+
 __pycache__/
-.ipynb_checkpoints/
+*.py[cod]
 
-# Modelli e checkpoint
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Cache pip e Hugging Face
+hf_cache/
+_pip_cache/
+.cache/
+
+
+# ============================================================
+# 3. MODELLI AI E CHECKPOINT
+# ============================================================
+
 *.keras
 *.pt
 *.pth
 *.h5
 *.ckpt
+*.safetensors
+*.gguf
 
-# Dataset
+# Modelli Hugging Face
+pytorch_model*.bin
+
+# Cartelle contenenti modelli
+models/
+
+# Eventuali esportazioni di modelli
+*.onnx
+*.tflite
+
+
+# ============================================================
+# 4. DATASET
+# ============================================================
+
+# Cartelle dataset
 data/
 dataset/
+
+# Dataset standard utilizzati nel corso
 FashionMNIST/
 MNIST/
 cifar-10-batches-py/
+
+# Archivi e formati dataset
 *.mat
 *.zip
 *.tar.gz
 
-# Cartelle modelli
-models/
+# Dataset Parquet e JSONL
+*.parquet
+*.jsonl
 
-# Output temporanei di training
+# NOTA:
+# I file CSV non vengono esclusi automaticamente.
+# Alcuni sono necessari per eseguire gli esercizi.
+
+
+# ============================================================
+# 5. OUTPUT TEMPORANEI DI TRAINING
+# ============================================================
+
 samples/
 gallery_epoch_*.png
-# Backup locali, pesi LLM e autenticazione
-.venv_backup_*/
-/requirements_venv_*.txt
-/requirements_restore_*.txt
-*.safetensors
-*.gguf
-pytorch_model*.bin
-hf_cache/
-_pip_cache/
+
+# Esperimenti MLflow
+mlruns/
+mlartifacts/
+
+# Output TensorBoard
+runs/
+lightning_logs/
+
+# Checkpoint temporanei
+checkpoints/
+
+
+# ============================================================
+# 6. DATABASE LOCALI
+# ============================================================
+
+# Database SQLite utilizzati da Flask, MLflow e Optuna
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+*.sqlite
+*.sqlite3
+
+# ATTENZIONE:
+# Non vengono esclusi i file Python che utilizzano
+# questi database, ma soltanto i database stessi.
+
+
+# ============================================================
+# 7. FLASK E STREAMLIT
+# ============================================================
+
+# Cache Flask
+.flask_cache/
+
+# File temporanei applicativi
+*.tmp
+*.temp
+
+# Configurazioni locali Streamlit
+.streamlit/secrets.toml
+
+# NOTA:
+# I file .streamlit/config.toml possono essere caricati,
+# purché non contengano informazioni riservate.
+
+
+# ============================================================
+# 8. STORYTELLER E GENERAZIONE IMMAGINI
+# ============================================================
+
+# Immagini, libri e dati generati dall'applicazione
+storyteller_data/
+
+# NOTA:
+# I file Python di Storyteller vengono mantenuti.
+# Sono esclusi soltanto gli output generati.
+
+
+# ============================================================
+# 9. PASSWORD, TOKEN E CREDENZIALI
+# ============================================================
+
 .env
 .env.*
+
+# Consente di pubblicare un modello di configurazione
 !.env.example
+
+# Token e credenziali
 token
 stored_tokens
+
+# Chiavi private
+*.pem
+*.key
+
+# NOTA:
+# Non inserire mai API key direttamente nel codice Python
+# o nelle celle dei notebook Jupyter.
+
+
+# ============================================================
+# 10. LOG E FILE TEMPORANEI
+# ============================================================
+
+*.log
 llama_crash_*.log
 
-# Output degli esperimenti GPT-2
+# File temporanei
+*.bak
+*.swp
+*.swo
+
+# File temporanei Windows
+Thumbs.db
+Desktop.ini
+
+
+# ============================================================
+# 11. OUTPUT ESPERIMENTI GPT-2
+# ============================================================
+
 /PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2-sft-en/
 /PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2-sft-trl/
 /PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2_lora_en_final/
 /PYTHON/Modulo_6_Generative/4_IntregrazioneLLM/gpt2_lora_final/
+
+
+# ============================================================
+# 12. DVC - DATA VERSION CONTROL
+# ============================================================
+
+# IMPORTANTE:
+# NON escludere i file .dvc.
+# Contengono i riferimenti ai dataset versionati.
+
+# Cache locale DVC
+.dvc/cache/
+.dvc/tmp/
+
+# NOTA:
+# Il file .dvc/config viene mantenuto.
+# Le credenziali eventualmente presenti in
+# .dvc/config.local non devono essere pubblicate.
+
+.dvc/config.local
+
+
+# ============================================================
+# 13. FILE DI CONFIGURAZIONE IDE
+# ============================================================
+
+# Visual Studio Code - preferenze locali
+.vscode/
+
+# PyCharm
+.idea/
+
+
+# ============================================================
+# 14. FILE DI SISTEMA OPERATIVO
+# ============================================================
+
+# macOS
+.DS_Store
+
+# Windows
+ehthumbs.db

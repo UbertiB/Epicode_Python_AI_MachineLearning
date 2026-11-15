@@ -1,0 +1,48 @@
+version: '3.8'
+
+# --- DEFINIZIONE DEI SERVIZI ---
+# Qui definiamo i container che compongono la nostra architettura.
+services:
+  
+  # Servizio 1: L'API Principale
+  # Contiene la nostra applicazione FastAPI con il modello AI.
+  api:
+    # Costruisce l'immagine usando il Dockerfile nella cartella corrente (.)
+    build: .
+    # Mappa la porta 8000 del container alla porta 8000 del computer ospite (localhost)
+    ports:
+      - "8000:8000"
+    # Variabili d'ambiente accessibili dentro il container (os.getenv)
+    environment:
+      - REDIS_HOST=redis        # Nome del servizio Redis (DNS interno di Docker)
+      - REDIS_PORT=6379         # Porta interna di Redis
+      - HF_HOME=/root/.cache/huggingface  # Dove salvare i modelli scaricati
+    # Assicura che l'API parta solo dopo che Redis è attivo
+    depends_on:
+      - redis
+    # Montiamo un volume persistente per non riscaricare il modello a ogni avvio
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    # Colleghiamo il servizio alla rete interna dedicata
+    networks:
+      - ai_network
+
+  # Servizio 2: Database di Cache
+  # Usa un'immagine ufficiale di Redis (versione Alpine Linux, molto leggera)
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - ai_network
+
+# --- VOLUMI PERSISTENTI ---
+# I volumi permettono di salvare dati che sopravvivono al riavvio dei container.
+volumes:
+  hf_cache:  # Qui verranno salvati i pesi del modello DistilBERT
+
+# --- RETI ---
+# Definiamo una rete privata per permettere ai container di parlarsi tra loro
+# isolandoli dal resto del sistema.
+networks:
+  ai_network:

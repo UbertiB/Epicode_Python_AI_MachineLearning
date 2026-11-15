@@ -1,0 +1,8 @@
+{
+    "outs": [
+        {
+            "md5": "566c64ff9e122203ccbb508f79c46230",
+            "path": "data.parquet"
+        }
+    ]
+}

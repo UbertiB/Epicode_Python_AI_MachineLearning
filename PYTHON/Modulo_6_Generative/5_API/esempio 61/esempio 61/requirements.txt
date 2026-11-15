@@ -1,0 +1,19 @@
+# --- Librerie Core per il Deep Learning ---
+# Utilizzata per definire l'architettura neurale e gestire il caricamento dei pesi
+torch==2.8.0
+# Fondamentale per la gestione dei vettori numerici e delle operazioni matematiche di base
+numpy==2.2.0
+
+# --- Framework Web e Gestione API ---
+# Framework principale scelto per la sua velocità e il supporto nativo all'asincronia
+fastapi==0.118.0
+# Server ASGI necessario per eseguire l'applicazione FastAPI in produzione
+uvicorn==0.34.0
+# Utilizzata per la validazione dei dati in ingresso e per definire gli schemi delle richieste
+pydantic==2.10.0
+
+# --- Elaborazione Dati e Serializzazione ---
+# Indispensabile per utilizzare l'oggetto StandardScaler durante l'inferenza
+scikit-learn==1.6.1
+# Utilizzata per caricare rapidamente il file .pkl dello scaler salvato sul disco
+joblib==1.4.2
